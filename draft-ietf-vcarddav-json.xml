@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?rfc compact="yes"?>
+<?rfc strict="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+<rfc category="std" docName="draft-ietf-vcarddav-json-00" ipr="trust200902">
+
+  <front>
+    <title abbrev="vCard in JSON">A JavaScript Object Notation (JSON) Representation for vCard</title>
+    <author initials="R." surname="Bhat" fullname="Raghurama Bhat">
+      <organization>Cisco Systems, Inc.</organization>
+      <address>
+        <postal>
+          <street>900 McCarthy Blvd.</street>
+          <city>Milpitas</city>
+          <region>CA</region>
+          <code>95035</code>
+          <country>USA</country>
+        </postal>
+        <phone>+1-408-902-2123</phone>
+        <email>ragbhat@cisco.com</email>
+      </address>
+    </author>
+    <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
+      <organization>Cisco Systems, Inc.</organization>
+      <address>
+        <postal>
+          <street>1899 Wyknoop Street, Suite 600</street>
+          <city>Denver</city>
+          <region>CO</region>
+          <code>80202</code>
+          <country>USA</country>
+        </postal>
+        <phone>+1-303-308-3282</phone>
+        <email>psaintan@cisco.com</email>
+      </address>
+    </author>
+    <date year="2012" month="May" day="4"/>
+    <keyword>vCard</keyword>
+    <keyword>JSON</keyword>
+    <abstract>
+      <t>This document defines a representation of vCard data in JavaScript Object Notation (JSON).</t>
+    </abstract>
+  </front>
+
+  <middle>
+
+    <section title="Introduction" anchor="intro">
+      <t>vCard <xref target='RFC6350'/> is a data format for representing and exchanging information about individuals and other entities.  It is a text-based format (as opposed to a binary format).  This document defines a representation for vCard data in JavaScript Object Notation (JSON), a lightweight, text-based, language-independent data interchange format derived from the ECMAScript Programming Language Standard (see <xref target='RFC4627'/>).  As with the XML representation of vCard defined in <xref target='RFC6351'/>, the data structure is exactly the same as for plain vCard, enabling a 1-to-1 mapping between the original vCard format and the JSON representation (or the XML representation).  The JSON formatting might be preferred in some contexts where JSON facilities are readily available and can be reused instead of writing a standalone vCard parser.</t>
+    </section>
+
+    <section title="Discussion Venue" anchor="venue">
+      <t>The preferred discussion venue for this document is the vcarddav@ietf.org mailing list, for which subscription information and archives can be found at <eref target='https://www.ietf.org/mailman/listinfo/vcarddav'/>.</t>
+    </section>
+
+    <section title="Terminology" anchor="terms">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119'/>.</t>
+    </section>
+
+    <section title="Example" anchor="example">
+      <t>The following is a JSON representation of the vCard that is also represented by the plain vCard format and the XML representation in <xref target='RFC6350'/> and <xref target='RFC6351'/>, respectively.</t>
+    </section>
+
+    <section title="Design Considerations" anchor="design">
+      <t>To follow.</t>
+    </section>
+
+    <section title="Format Conversions" anchor="conversions">
+      <t>To follow.</t>
+    </section>
+
+    <section title="Security Considerations" anchor="security">
+      <t>All the security considerations applicable to plain vCard <xref target='RFC6350'/> are also applicable to the JSON representation of vCard.</t>
+      <t>As explained in <xref target='RFC4627'/>, JSON is a subset of JavaScript, but it is a safe subset that excludes assignment and invocation.  A JSON text can be safely passed into JavaScript's eval() function (which compiles and executes a string) if all the characters not enclosed in strings are in the set of characters that form JSON tokens.</t>
+    </section>
+
+    <section title="IANA Considerations" anchor="iana">
+      <t>To follow.</t>
+      <t>[[AUTHOR NOTE: We will need to define a Media Type.]]</t>
+    </section>
+
+    <section title="Acknowledgements" anchor="acks">
+      <t>Some text in this document was borrowed from <xref target='RFC6351'/>.</t>
+    </section>
+
+  </middle>
+
+  <back>
+
+    <references title="Normative References">
+
+<reference anchor='RFC2119'>
+<front>
+<title abbrev='RFC Key Words'>Key words for use in RFCs to Indicate Requirement Levels</title>
+<author initials='S.' surname='Bradner' fullname='Scott Bradner'>
+<organization>Harvard University</organization>
+<address>
+<postal>
+<street>1350 Mass. Ave.</street>
+<street>Cambridge</street>
+<street>MA 02138</street></postal>
+<phone>- +1 617 495 3864</phone>
+<email>sob@harvard.edu</email></address></author>
+<date year='1997' month='March' />
+<area>General</area>
+<keyword>keyword</keyword>
+<abstract>
+<t>
+   In many standards track documents several words are used to signify
+   the requirements in the specification.  These words are often
+   capitalized.  This document defines these words as they should be
+   interpreted in IETF documents.  Authors who follow these guidelines
+   should incorporate this phrase near the beginning of their document:
+
+<list>
+<t>
+      The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in
+      RFC 2119.
+</t></list></t>
+<t>
+   Note that the force of these words is modified by the requirement
+   level of the document in which they are used.
+</t></abstract></front>
+<seriesInfo name='BCP' value='14' />
+<seriesInfo name='RFC' value='2119' />
+<format type='TXT' octets='4723' target='http://www.rfc-editor.org/rfc/rfc2119.txt' />
+<format type='HTML' octets='17491' target='http://xml.resource.org/public/rfc/html/rfc2119.html' />
+<format type='XML' octets='5777' target='http://xml.resource.org/public/rfc/xml/rfc2119.xml' />
+</reference>
+
+<reference anchor='RFC4627'>
+<front>
+<title>The application/json Media Type for JavaScript Object Notation (JSON)</title>
+<author initials='D.' surname='Crockford' fullname='D. Crockford'>
+<organization /></author>
+<date year='2006' month='July' />
+<abstract>
+<t>JavaScript Object Notation (JSON) is a lightweight, text-based, language-independent data interchange format.  It was derived from the ECMAScript Programming Language Standard.  JSON defines a small set of formatting rules for the portable representation of structured data.  This memo provides information for the Internet community.</t></abstract></front>
+<seriesInfo name='RFC' value='4627' />
+<format type='TXT' octets='16319' target='http://www.rfc-editor.org/rfc/rfc4627.txt' />
+</reference>
+
+<reference anchor='RFC6350'>
+<front>
+<title>vCard Format Specification</title>
+<author initials='S' surname='Perreault' fullname='Simon Perreault'>
+    <organization />
+</author>
+<date month='May' day='26' year='2011' />
+<abstract><t>This document defines the vCard data format for representing and exchanging a variety of information about individuals and other entities (e.g., formatted and structured name and delivery addresses, email address, multiple telephone numbers, photograph, logo, audio clips, etc.).</t></abstract>
+</front>
+<seriesInfo name='Internet-Draft' value='draft-ietf-vcarddav-vcardrev-22' />
+<format type='TXT'
+        target='http://www.ietf.org/internet-drafts/draft-ietf-vcarddav-vcardrev-22.txt' />
+</reference>
+
+    </references>
+
+    <references title="Informative References">
+
+<reference anchor='RFC6351'>
+<front>
+<title>xCard: vCard XML Representation</title>
+<author initials='S.' surname='Perreault' fullname='S. Perreault'>
+<organization /></author>
+<date year='2011' month='August' />
+<abstract>
+<t>This document defines the XML schema of the vCard data format. [STANDARDS-TRACK]</t></abstract></front>
+<seriesInfo name='RFC' value='6351' />
+<format type='TXT' octets='34086' target='http://www.rfc-editor.org/rfc/rfc6351.txt' />
+</reference>
+
+    </references>
+
+  </back>
+
+</rfc>
