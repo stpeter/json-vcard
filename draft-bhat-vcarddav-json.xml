@@ -37,7 +37,7 @@
         <email>psaintan@cisco.com</email>
       </address>
     </author>
-    <date year="2012" month="May" day="4"/>
+    <date year="2012" month="May" day="29"/>
     <keyword>vCard</keyword>
     <keyword>JSON</keyword>
     <abstract>
@@ -60,15 +60,163 @@
     </section>
 
     <section title="Example" anchor="example">
-      <t>The following is a JSON representation of the vCard that is also represented by the plain vCard format and the XML representation in <xref target='RFC6350'/> and <xref target='RFC6351'/>, respectively.</t>
+      <t>To ease comparison with both plain vCard and the XML representation, the following example is a JSON representation of the same vCard (for Simon Perreault) that is also shown in <xref target='RFC6350'/> and <xref target='RFC6351'/>.</t>
+      <figure anchor='figure-1' title='vCard representation of RFC 6350 example'>
+        <artwork><![CDATA[
+{
+  "vcard" : {
+    "fn":  "Simon Perreault",
+    "n": {
+        "surname": "Simon",
+        "given": "Perreault",
+        "suffix": [ "ing. jr", "M.Sc."]
+    },
+    "bday": { "date": "--0203" },
+    "anniversary": { "date-time": "20090808T1430-0500" },
+    "gender": { "sex" : "M" },
+    "lang": [ 
+      {
+      "parameters": 
+        {
+        "pref": { "integer": "1" }
+        },
+      "language-tag": { "fr" },
+      },
+      {
+      "parameters": 
+        {
+        "pref": { "integer": "2" }
+        },
+      "language-tag": { "en" },
+      },
+    ]
+    "org": 
+      {
+      "parameters":
+        [
+        "type": { "text": ["work"] }
+        ],
+      "text": "Viagenie"
+      },
+    "adr": 
+      {
+      "parameters":
+        [
+        "type": { "text": ["work", "voice"] }
+        ],
+      {
+      "label": "Simon Perreault
+           2875 boul. Laurier, suite D2-630
+           Quebec, QC, Canada
+           G1V 2M2"
+      "street": "2875 boul. Laurier, suite D2-630",
+      "locality": "Quebec",
+      "region": "QC",
+      "code": "G1V 2M2",
+      "country": "CA"
+      },
+    "tel": [ 
+      {
+      "parameters": 
+        "type": { "text": ["work", "voice"]},
+        "uri": "tel:+1-418-656-9254;ext=102"
+      },
+      {
+      "parameters": 
+        "type": { "text": ["work", "text", "voice", "cell", "video"]},
+        "uri": "tel:+1-418-262-6501"
+      }
+    ],
+    "email": {
+      "parameters": { "type": { "text": ["work"]} },
+      "text": "simon.perreault@viagenie.ca"
+    },
+    "geo": {
+      "parameters": { "type": { "text": ["work"]} },
+      "uri": "geo:46.766336,-71.28955"
+    },
+    "key": {
+      "parameters": { "type": { "text": ["work"]} },
+      "uri": "http://www.viagenie.ca/simon.perreault/simon.asc"
+    },
+    "tz": "America/Los_Angeles ",
+    "url": {
+      "parameters": { "type": { "text": ["home"]} },
+      "uri": "http://nomis80.org"
+    }
+  }
+}
+        ]]></artwork>
+      </figure>
     </section>
 
     <section title="Design Considerations" anchor="design">
-      <t>To follow.</t>
+      <t>The general idea is to map vCard parameters, properties and value types to JSON property/value pairs. For example, the "FN" property is mapped to the fn property. Value contains a text string that corresponds to the vCard property's value. vCard parameters are also mapped to JSON objects which are contained in the value object.  For example, the "TYPE" parameter applied to the "TEL" property would look like the following in JSON.</t>
+      <figure anchor='figure-2' title='Mapping of a vCard parameter'>
+        <artwork><![CDATA[
+  "tel": {
+      "type": [ "voice", "video" ],
+      "uri": "tel:+1-555-555-555"
+  }
+        ]]></artwork>
+      </figure>
+      <t>Parameters taking a list of values are converted to a JSON array object.  Properties having structured values (e.g., the "N" property) are expressed by nested JSON object trees. Property names in that tree (e.g.,"surname", "given", etc.) do not have a vCard equivalent since they are identified by position in plain vCard.  Line folding is a non-issue in JSON.  Therefore, the mapping from vCard to JSON is done after the unfolding procedure is carried out. Conversely, the mapping from JSON to vCard is done before the folding procedure is carried out.  A top-level "vcards" object is used as root.  It contains one or more "vcard" objects, each representing a complete vCard. The "vcards" object MUST be present even when only a single vCard is present in a JSON document.  The group construct (Section 3.2 in [RFC6350]) is represented with the JSON object of the same name.  For example:</t>
+      <figure anchor='figure-3' title='Mapping of lists and structured values'>
+        <artwork><![CDATA[
+
+  {
+  "vcard": {
+      "version" : "4.0"
+      "contact": {
+          "fn": "...",
+          "email": "..."
+      },
+      "media" : {
+        "photo": "..."
+        },
+      "categories": "..."
+  }
+  }
+        ]]></artwork>
+      </figure>
+      <t>... is equivalent to:</t>
+      <figure anchor='figure-4' title='Plain vCard equivalent'>
+        <artwork><![CDATA[
+BEGIN:VCARD
+VERSION:4.0
+contact.FN=...
+contact.EMAIL=...
+media.PHOTO=...
+CATEGORIES=...
+END:VCARD
+        ]]></artwork>
+      </figure>
     </section>
 
+    <section title="Extensibility" anchor="extensibility">
+      <t> The original vCard format is extensible.  New properties, parameters,data types and values (collectively known as vCard elements, not to be confused with XML elements) can be registered with IANA (see [RFC6350], Section 10.2).  It is expected that these vCard extensions will also specify extensions to the JSON format described in this document.  New JSON vCard property and parameter element names MUST be lower-case.  This is necessary to ensure that round-tripping between JSON and plain-text vCard works correctly.  Unregistered extensions (i.e., those starting with "X-" and "VND-...-") are expressed in JSON by using properties starting with "x-" and "vnd-...-". Refer to Section 6 for the implications when converting between plain-text vCard and JSON.  For example:</t>
+      <figure anchor='figure-5' title='An example of extensibility'>
+        <artwork><![CDATA[
+{
+"x-my-prop": {
+  "parameters": {
+    "pref": { "integer": "1" }
+    },
+  "text": "value goes here"
+  }
+}
+        ]]></artwork>
+      </figure>
+      <t>A vCard JSON parser MUST ignore JSON properties and values for which it doesn't recognize the expanded name.  In the original vCard format, the "VERSION" property was mandatory and played a role in extensibility. In XML, this property was dropped in favor of the XML namespace mechanism. In JSON mapping, we reintroduce the "version" property. It plays a similar role as in the original vCard format.  Parameters containing a list of values are expressed using a array of objects in JSON.</t>
+      </section>
+      <section title="Limitations" anchor="limitations">
+          <t>
+              The JSON format does not validate the cardinality of properties.  This is a limitation of the JSON format specification.  Cardinalities of the original vCard format [RFC6350] MUST still be respected.
+          </t>
+      </section>
+
     <section title="Format Conversions" anchor="conversions">
-      <t>To follow.</t>
+      <t> To follow</t>
     </section>
 
     <section title="Security Considerations" anchor="security">
