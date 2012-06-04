@@ -5,7 +5,7 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="4"?>
-<rfc category="std" docName="draft-ietf-vcarddav-json-00" ipr="trust200902">
+<rfc category="std" docName="draft-bhat-vcarddav-json-00" ipr="trust200902">
 
   <front>
     <title abbrev="vCard in JSON">A JavaScript Object Notation (JSON) Representation for vCard</title>
@@ -37,7 +37,7 @@
         <email>psaintan@cisco.com</email>
       </address>
     </author>
-    <date year="2012" month="May" day="29"/>
+    <date year="2012" month="June" day="4"/>
     <keyword>vCard</keyword>
     <keyword>JSON</keyword>
     <abstract>
@@ -48,7 +48,7 @@
   <middle>
 
     <section title="Introduction" anchor="intro">
-      <t>vCard <xref target='RFC6350'/> is a data format for representing and exchanging information about individuals and other entities.  It is a text-based format (as opposed to a binary format).  This document defines a representation for vCard data in JavaScript Object Notation (JSON), a lightweight, text-based, language-independent data interchange format derived from the ECMAScript Programming Language Standard (see <xref target='RFC4627'/>).  As with the XML representation of vCard defined in <xref target='RFC6351'/>, the data structure is exactly the same as for plain vCard, enabling a 1-to-1 mapping between the original vCard format and the JSON representation (or the XML representation).  The JSON formatting might be preferred in some contexts where JSON facilities are readily available and can be reused instead of writing a standalone vCard parser.</t>
+      <t>vCard <xref target='RFC6350'/> is a data format for representing and exchanging information about individuals and other entities.  It is a text-based format (as opposed to a binary format).  This document defines a representation for vCard data in JavaScript Object Notation (JSON), a lightweight, text-based, language-independent data interchange format derived from the ECMAScript Programming Language Standard (see <xref target='RFC4627'/>).  As with the XML representation of vCard defined in <xref target='RFC6351'/>, the data structure is exactly the same as for plain vCard, enabling a 1-to-1 mapping between the plain vCard format and the JSON representation (or the XML representation).  The JSON formatting might be preferred in some contexts where JSON facilities are readily available and can be reused instead of writing a standalone vCard parser.</t>
     </section>
 
     <section title="Discussion Venue" anchor="venue">
@@ -61,7 +61,7 @@
 
     <section title="Example" anchor="example">
       <t>To ease comparison with both plain vCard and the XML representation, the following example is a JSON representation of the same vCard (for Simon Perreault) that is also shown in <xref target='RFC6350'/> and <xref target='RFC6351'/>.</t>
-      <figure anchor='figure-1' title='vCard representation of RFC 6350 example'>
+      <figure anchor='figure-1' title='JSON representation of RFC 6350 example'>
         <artwork><![CDATA[
 {
     "version":"4.0",
@@ -124,7 +124,7 @@
       "type": "work",
       "uri": "http://www.viagenie.ca/simon.perreault/simon.asc"
     },
-    "tz": "America/Los_Angeles",
+    "tz": "America/Montreal",
     "url": {
       "type": "home",
       "uri": "http://nomis80.org"
@@ -135,7 +135,7 @@
     </section>
 
     <section title="Design Considerations" anchor="design">
-      <t>The general idea is to map vCard parameters, properties and value types to JSON property/value pairs. For example, the "FN" property is mapped to the fn property. Value contains a text string that corresponds to the vCard property's value. vCard parameters are also mapped to JSON objects which are contained in the value object.  For example, the "TYPE" parameter applied to the "TEL" property would look like the following in JSON.</t>
+      <t>The general idea is to map vCard parameters, properties and value types to JSON property/value pairs.  For example, the "FN" property is mapped to the fn property.  Value contains a text string that corresponds to the vCard property's value.  vCard parameters are also mapped to JSON objects which are contained in the value object.  For example, the "TYPE" parameter applied to the "TEL" property would look like the following in JSON.</t>
       <figure anchor='figure-2' title='Mapping of a vCard parameter'>
         <artwork><![CDATA[
   "tel": {
@@ -145,7 +145,7 @@
         ]]></artwork>
       </figure>
 
-      <t>Parameters taking a list of values and properties with cardinality of more than one are converted to a JSON array object.  Properties having structured values (e.g., the "N" property) are expressed by nested JSON object trees. Property names in that tree (e.g.,"surname", "given", etc.) do not have a vCard equivalent since they are identified by position in plain vCard.  Line folding is a non-issue in JSON.  Therefore, the mapping from vCard to JSON is done after the unfolding procedure is carried out. Conversely, the mapping from JSON to vCard is done before the folding procedure is carried out. The group construct (Section 3.2 in [RFC6350]) is represented with the JSON object of the same name.  For example:</t>
+      <t>Parameters taking a list of values and properties with cardinality of more than one are converted to a JSON array object.  Properties having structured values (e.g., the "N" property) are expressed by nested JSON object trees.  Property names in that tree ("surname", "given", etc.) do not have a vCard equivalent since they are identified by position in plain vCard.  Line folding is a non-issue in JSON.  Therefore, the mapping from vCard to JSON is done after the unfolding procedure is carried out.  Conversely, the mapping from JSON to vCard is done before the folding procedure is carried out.  The group construct (Section 3.2 in <xref target='RFC6350'/>) is represented with the JSON object of the same name.  For example:</t>
       <figure anchor='figure-3' title='Mapping of lists and structured values'>
         <artwork><![CDATA[
 
@@ -174,13 +174,13 @@ CATEGORIES=...
 END:VCARD
         ]]></artwork>
       </figure>
-        <t>VALUE parameter from the original VCARD format is used as the property name in the JSON format. If there is no VALUE parameter specified, it is treated as equivalent to VALUE=text. For example:</t>
-        <figure anchor='figure-5' title='Mapping of VALUE parameter'>
-            <artwork><![CDATA[
+      <t>The VALUE parameter from the plain VCARD format is used as the property name in the JSON format.  If there is no VALUE parameter specified, it is treated as equivalent to VALUE=text.  For example:</t>
+      <figure anchor='figure-5' title='Mapping of VALUE parameter'>
+        <artwork><![CDATA[
 {
     "email": {
-        "type": "work",
-        "text": "simon.perreault@viagenie.ca"
+      "type": "work",
+      "text": "simon.perreault@viagenie.ca"
     },
     "geo": {
       "type": "work",
@@ -189,10 +189,10 @@ END:VCARD
     "bday": { "date": "--0203" },
 }
         ]]></artwork>
-        </figure>
-        <t>... is equivalent to:</t>
-        <figure anchor='figure-6' title='Plain vCard equivalent'>
-            <artwork><![CDATA[
+      </figure>
+      <t>... is equivalent to:</t>
+      <figure anchor='figure-6' title='Plain vCard equivalent'>
+        <artwork><![CDATA[
 BEGIN:VCARD
 VERSION:4.0
 EMAIL;VALUE=text;type=work:simon.perreault@viagenie.ca
@@ -200,12 +200,14 @@ GEO;VALUE=uri;type=work:geo:46.766336,-71.28955
 BDATE;VALUE=date:--0203
 END:VCARD
         ]]></artwork>
-        </figure>
+      </figure>
+      <t>In the plain vCard format, the "VERSION" property was mandatory and played a role in extensibility.  In XML, this property was dropped in favor of the XML namespace mechanism.  In the JSON mapping, we keep the "version" property, which plays a similar role as in the plain vCard format.</t>
+      <t>Finally, there is no reason to include a top-level name of "vcard" or "vcards", since the data type can be determined from the media type of the data file.</t>
 
     </section>
 
     <section title="Extensibility" anchor="extensibility">
-      <t> The original vCard format is extensible.  New properties, parameters,data types and values (collectively known as vCard elements, not to be confused with XML elements) can be registered with IANA (see [RFC6350], Section 10.2).  It is expected that these vCard extensions will also specify extensions to the JSON format described in this document.  New JSON vCard property and parameter element names MUST be lower-case.  This is necessary to ensure that round-tripping between JSON and plain-text vCard works correctly.  Unregistered extensions (i.e., those starting with "X-" and "VND-...-") are expressed in JSON by using properties starting with "x-" and "vnd-...-". Refer to Section 6 for the implications when converting between plain-text vCard and JSON.  For example:</t>
+      <t>The plain vCard format is extensible.  New properties, parameters, data types and values (collectively known as vCard elements, not to be confused with XML elements) can be registered with IANA (see <xref target='RFC6350'/>, Section 10.2).  It is expected that these vCard extensions will also specify extensions to the JSON format described in this document.  New JSON vCard property and parameter element names MUST be lower-case.  This is necessary to ensure that round-tripping between JSON and plain-text vCard works correctly.  Unregistered extensions (i.e., those starting with "X-" and "VND-...-") are expressed in JSON by using properties starting with "x-" and "vnd-...-".  Refer to <xref target='conversions'/> for the implications when converting between plain-text vCard and JSON.  For example:</t>
       <figure anchor='figure-7' title='An example of extensibility'>
         <artwork><![CDATA[
 {
@@ -216,16 +218,13 @@ END:VCARD
 }
         ]]></artwork>
       </figure>
-      <t>A vCard JSON parser MUST ignore JSON properties and values for which it doesn't recognize the expanded name.  In the original vCard format, the "VERSION" property was mandatory and played a role in extensibility. In XML, this property was dropped in favor of the XML namespace mechanism. In JSON mapping, we reintroduce the "version" property. It plays a similar role as in the original vCard format.  Parameters containing a list of values are expressed using a array of objects in JSON.</t>
-      </section>
-      <section title="Limitations" anchor="limitations">
-          <t>
-              The JSON format does not validate the cardinality of properties.  This is a limitation of the JSON format specification.  Cardinalities of the original vCard format [RFC6350] MUST still be respected.
-          </t>
-      </section>
+      <t>A vCard JSON parser MUST ignore JSON parameters and properties for which it doesn't recognize the name.</t>
+      <t>In the XML representation of vCard <xref target='RFC6351'/>, extensibility is handled in part by using XML namespaces <xref target='XML-NAMES'/> for properties and parameters that have no equivalent in plain-text vCard.  For extensions that might appear in both the JSON representation and the XML representation, it is RECOMMENDED to represent the JSON parameter or property name in "Clark Notation" <xref target='CLARK'/> by preceding the name itself with the Uniform Resource Identifier <xref target='RFC3986'/> of the XML namespace, enclosed in curly brackets ('{' and '}'); thus the "expanded name" will be of the form "{URI}name".  For extensions that will appear in the JSON representation but not the XML representation, a mere (non-expanded) name can be used, or the name can be an expanded name formed in another manner (e.g., using the "reverse domain name" convention such as "com.example.vcard.foo").</t> 
+      <t>The JSON format does not validate the cardinality of properties.  This is a limitation of the JSON format specification.  Cardinalities of the plain vCard format <xref target='RFC6350'/> MUST still be respected.</t>
+    </section>
 
     <section title="Format Conversions" anchor="conversions">
-      <t> To follow</t>
+      <t>To follow</t>
     </section>
 
     <section title="Security Considerations" anchor="security">
@@ -234,8 +233,32 @@ END:VCARD
     </section>
 
     <section title="IANA Considerations" anchor="iana">
-      <t>To follow.</t>
-      <t>[[AUTHOR NOTE: We will need to define a Media Type.]]</t>
+      <t>To: ietf-types@iana.org</t>
+      <t>Subject: Registration of media type application/vcard+json</t>
+      <t>
+        <list style='hanging'>
+          <t hangText="Type name: application"></t>
+          <t hangText="Subtype name: vcard+json"></t>
+          <t hangText="Required parameters: (none)"></t>
+          <t hangText="Optional parameters: (none)"></t>
+          <t hangText="Encoding considerations:">8bit if UTF-8; binary if UTF-16 or UTF-32; see RFC 4627.</t>
+          <t hangText="Security considerations:">All of the security considerations specified in RFC 4627 and RFC 6350 apply.</t>
+          <t hangText="Interoperability considerations: (none)"></t>
+          <t hangText="Specification:">&rfc.number;</t>
+          <t hangText="Applications that use this media type:">vCard processors.</t>
+          <t hangText="Additional information:">
+            <list style='hanging'>
+              <t hangText="Magic number(s):">(none)</t>
+              <t hangText="File extension(s):">.jcard</t>
+              <t hangText="Macintosh file type code(s):">TEXT</t>
+            </list>
+          </t>
+          <t hangText="Person and email address to contact for further information:">vCard discussion mailing list, &lt;vcarddav@ietf.org&gt;</t>
+          <t hangText="Intended usage:">COMMON</t>
+          <t hangText="Restrictions on usage:">(none)</t>
+          <t hangText="Author:">Peter Saint-Andre, &lt;psaintan@cisco.com&gt;</t>
+          <t hangText="Change controller:">Peter Saint-Andre, &lt;psaintan@cisco.com&gt;</t>
+        </list></t>
     </section>
 
     <section title="Acknowledgements" anchor="acks">
@@ -304,20 +327,98 @@ END:VCARD
 <reference anchor='RFC6350'>
 <front>
 <title>vCard Format Specification</title>
-<author initials='S' surname='Perreault' fullname='Simon Perreault'>
-    <organization />
-</author>
-<date month='May' day='26' year='2011' />
-<abstract><t>This document defines the vCard data format for representing and exchanging a variety of information about individuals and other entities (e.g., formatted and structured name and delivery addresses, email address, multiple telephone numbers, photograph, logo, audio clips, etc.).</t></abstract>
-</front>
-<seriesInfo name='Internet-Draft' value='draft-ietf-vcarddav-vcardrev-22' />
-<format type='TXT'
-        target='http://www.ietf.org/internet-drafts/draft-ietf-vcarddav-vcardrev-22.txt' />
+<author initials='S.' surname='Perreault' fullname='S. Perreault'>
+<organization /></author>
+<date year='2011' month='August' />
+<abstract>
+<t>This document defines the vCard data format for representing and exchanging a variety of information about individuals and other entities (e.g., formatted and structured name and delivery addresses, email address, multiple telephone numbers, photograph, logo, audio clips, etc.).  This document obsoletes RFCs 2425, 2426, and 4770, and updates RFC 2739. [STANDARDS-TRACK]</t></abstract></front>
+<seriesInfo name='RFC' value='6350' />
+<format type='TXT' octets='139895' target='http://www.rfc-editor.org/rfc/rfc6350.txt' />
 </reference>
 
     </references>
 
     <references title="Informative References">
+
+<reference anchor='CLARK' target='http://www.jclark.com/xml/xmlns.htm'>
+<front>
+<title>Clark Notation</title>
+<author initials='J.' surname='Clark' fullname='James Clark'>
+</author>
+<date year='1999' month='February' />
+</front>
+</reference>
+
+<reference anchor='RFC3986'>
+<front>
+<title abbrev='URI Generic Syntax'>Uniform Resource Identifier (URI): Generic Syntax</title>
+<author initials='T.' surname='Berners-Lee' fullname='Tim Berners-Lee'>
+<organization abbrev='W3C/MIT'>World Wide Web Consortium</organization>
+<address>
+<postal>
+<street>Massachusetts Institute of Technology</street>
+<street>77 Massachusetts Avenue</street>
+<city>Cambridge</city>
+<region>MA</region>
+<code>02139</code>
+<country>USA</country></postal>
+<phone>+1-617-253-5702</phone>
+<facsimile>+1-617-258-5999</facsimile>
+<email>timbl@w3.org</email>
+<uri>http://www.w3.org/People/Berners-Lee/</uri></address></author>
+<author initials='R.' surname='Fielding' fullname='Roy T. Fielding'>
+<organization abbrev='Day Software'>Day Software</organization>
+<address>
+<postal>
+<street>5251 California Ave., Suite 110</street>
+<city>Irvine</city>
+<region>CA</region>
+<code>92617</code>
+<country>USA</country></postal>
+<phone>+1-949-679-2960</phone>
+<facsimile>+1-949-679-2972</facsimile>
+<email>fielding@gbiv.com</email>
+<uri>http://roy.gbiv.com/</uri></address></author>
+<author initials='L.' surname='Masinter' fullname='Larry Masinter'>
+<organization abbrev='Adobe Systems'>Adobe Systems Incorporated</organization>
+<address>
+<postal>
+<street>345 Park Ave</street>
+<city>San Jose</city>
+<region>CA</region>
+<code>95110</code>
+<country>USA</country></postal>
+<phone>+1-408-536-3024</phone>
+<email>LMM@acm.org</email>
+<uri>http://larry.masinter.net/</uri></address></author>
+<date year='2005' month='January' />
+<area>Applications</area>
+<keyword>uniform resource identifier</keyword>
+<keyword>URI</keyword>
+<keyword>URL</keyword>
+<keyword>URN</keyword>
+<keyword>WWW</keyword>
+<keyword>resource</keyword>
+<abstract>
+<t>
+A Uniform Resource Identifier (URI) is a compact sequence of characters
+that identifies an abstract or physical resource.  This specification
+defines the generic URI syntax and a process for resolving URI references
+that might be in relative form, along with guidelines and security
+considerations for the use of URIs on the Internet.
+The URI syntax defines a grammar that is a superset of all valid URIs,
+allowing an implementation to parse the common components of a URI
+reference without knowing the scheme-specific requirements of every
+possible identifier.  This specification does not define a generative
+grammar for URIs; that task is performed by the individual
+specifications of each URI scheme.
+</t></abstract></front>
+<seriesInfo name='STD' value='66' />
+<seriesInfo name='RFC' value='3986' />
+<format type='TXT' octets='141811' target='http://www.rfc-editor.org/rfc/rfc3986.txt' />
+<format type='HTML' octets='213584' target='http://xml.resource.org/public/rfc/html/rfc3986.html' />
+<format type='XML' octets='163534' target='http://xml.resource.org/public/rfc/xml/rfc3986.xml' />
+</reference>
 
 <reference anchor='RFC6351'>
 <front>
@@ -330,6 +431,31 @@ END:VCARD
 <seriesInfo name='RFC' value='6351' />
 <format type='TXT' octets='34086' target='http://www.rfc-editor.org/rfc/rfc6351.txt' />
 </reference>
+
+<reference anchor="XML-NAMES" target='http://www.w3.org/TR/2009/REC-xml-names-20091208'>
+<front>
+<title>Namespaces in XML 1.0 (Third Edition)</title>
+<author initials='H.' surname='Thompson' fullname='Henry S. Thompson'>
+    <organization />
+</author>
+<author initials='D.' surname='Hollander' fullname='Dave Hollander'>
+    <organization />
+</author>
+<author initials='A.' surname='Layman' fullname='Andrew Layman'>
+    <organization />
+</author>
+<author initials='T.' surname='Bray' fullname='Tim Bray'>
+    <organization />
+</author>
+<author initials='R.' surname='Tobin' fullname='Richard Tobin'>
+    <organization />
+</author>
+<date month='December' day='8' year='2009' />
+</front>
+<seriesInfo name='World Wide Web Consortium Recommendation' value='REC-xml-names-20091208' />
+<format type='HTML' target='http://www.w3.org/TR/2009/REC-xml-names-20091208' />
+</reference>
+
 
     </references>
 
