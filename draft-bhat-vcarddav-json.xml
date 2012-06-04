@@ -64,7 +64,7 @@
       <figure anchor='figure-1' title='vCard representation of RFC 6350 example'>
         <artwork><![CDATA[
 {
-  "vcard" : {
+    "version":"4.0",
     "fn":  "Simon Perreault",
     "n": {
         "surname": "Simon",
@@ -76,39 +76,26 @@
     "gender": { "sex" : "M" },
     "lang": [ 
       {
-      "parameters": 
-        {
-        "pref": { "integer": "1" }
-        },
-      "language-tag": { "fr" },
+        "pref": 1,
+        "text": "fr",
       },
       {
-      "parameters": 
-        {
-        "pref": { "integer": "2" }
-        },
-      "language-tag": { "en" },
+        "pref": 2,
+        "text": "en",
       },
-    ]
+    ],
     "org": 
       {
-      "parameters":
-        [
-        "type": { "text": ["work"] }
-        ],
-      "text": "Viagenie"
+        "type": "work",
+        "text": "Viagenie"
       },
     "adr": 
       {
-      "parameters":
-        [
-        "type": { "text": ["work", "voice"] }
-        ],
-      {
-      "label": "Simon Perreault
+        "type": "work",
+        "label": "Simon Perreault
            2875 boul. Laurier, suite D2-630
            Quebec, QC, Canada
-           G1V 2M2"
+           G1V 2M2",
       "street": "2875 boul. Laurier, suite D2-630",
       "locality": "Quebec",
       "region": "QC",
@@ -117,34 +104,31 @@
       },
     "tel": [ 
       {
-      "parameters": 
-        "type": { "text": ["work", "voice"]},
+        "type":  ["work", "voice"],
         "uri": "tel:+1-418-656-9254;ext=102"
       },
       {
-      "parameters": 
-        "type": { "text": ["work", "text", "voice", "cell", "video"]},
+        "type": ["work", "text", "voice", "cell", "video"],
         "uri": "tel:+1-418-262-6501"
       }
     ],
     "email": {
-      "parameters": { "type": { "text": ["work"]} },
-      "text": "simon.perreault@viagenie.ca"
+        "type": "work",
+        "text": "simon.perreault@viagenie.ca"
     },
     "geo": {
-      "parameters": { "type": { "text": ["work"]} },
+      "type": "work",
       "uri": "geo:46.766336,-71.28955"
     },
     "key": {
-      "parameters": { "type": { "text": ["work"]} },
+      "type": "work",
       "uri": "http://www.viagenie.ca/simon.perreault/simon.asc"
     },
-    "tz": "America/Los_Angeles ",
+    "tz": "America/Los_Angeles",
     "url": {
-      "parameters": { "type": { "text": ["home"]} },
+      "type": "home",
       "uri": "http://nomis80.org"
     }
-  }
 }
         ]]></artwork>
       </figure>
@@ -160,12 +144,12 @@
   }
         ]]></artwork>
       </figure>
-      <t>Parameters taking a list of values are converted to a JSON array object.  Properties having structured values (e.g., the "N" property) are expressed by nested JSON object trees. Property names in that tree (e.g.,"surname", "given", etc.) do not have a vCard equivalent since they are identified by position in plain vCard.  Line folding is a non-issue in JSON.  Therefore, the mapping from vCard to JSON is done after the unfolding procedure is carried out. Conversely, the mapping from JSON to vCard is done before the folding procedure is carried out.  A top-level "vcards" object is used as root.  It contains one or more "vcard" objects, each representing a complete vCard. The "vcards" object MUST be present even when only a single vCard is present in a JSON document.  The group construct (Section 3.2 in [RFC6350]) is represented with the JSON object of the same name.  For example:</t>
+
+      <t>Parameters taking a list of values and properties with cardinality of more than one are converted to a JSON array object.  Properties having structured values (e.g., the "N" property) are expressed by nested JSON object trees. Property names in that tree (e.g.,"surname", "given", etc.) do not have a vCard equivalent since they are identified by position in plain vCard.  Line folding is a non-issue in JSON.  Therefore, the mapping from vCard to JSON is done after the unfolding procedure is carried out. Conversely, the mapping from JSON to vCard is done before the folding procedure is carried out. The group construct (Section 3.2 in [RFC6350]) is represented with the JSON object of the same name.  For example:</t>
       <figure anchor='figure-3' title='Mapping of lists and structured values'>
         <artwork><![CDATA[
 
   {
-  "vcard": {
       "version" : "4.0"
       "contact": {
           "fn": "...",
@@ -175,7 +159,6 @@
         "photo": "..."
         },
       "categories": "..."
-  }
   }
         ]]></artwork>
       </figure>
@@ -191,18 +174,44 @@ CATEGORIES=...
 END:VCARD
         ]]></artwork>
       </figure>
+        <t>VALUE parameter from the original VCARD format is used as the property name in the JSON format. If there is no VALUE parameter specified, it is treated as equivalent to VALUE=text. For example:</t>
+        <figure anchor='figure-5' title='Mapping of VALUE parameter'>
+            <artwork><![CDATA[
+{
+    "email": {
+        "type": "work",
+        "text": "simon.perreault@viagenie.ca"
+    },
+    "geo": {
+      "type": "work",
+      "uri": "geo:46.766336,-71.28955"
+    },
+    "bday": { "date": "--0203" },
+}
+        ]]></artwork>
+        </figure>
+        <t>... is equivalent to:</t>
+        <figure anchor='figure-6' title='Plain vCard equivalent'>
+            <artwork><![CDATA[
+BEGIN:VCARD
+VERSION:4.0
+EMAIL;VALUE=text;type=work:simon.perreault@viagenie.ca
+GEO;VALUE=uri;type=work:geo:46.766336,-71.28955
+BDATE;VALUE=date:--0203
+END:VCARD
+        ]]></artwork>
+        </figure>
+
     </section>
 
     <section title="Extensibility" anchor="extensibility">
       <t> The original vCard format is extensible.  New properties, parameters,data types and values (collectively known as vCard elements, not to be confused with XML elements) can be registered with IANA (see [RFC6350], Section 10.2).  It is expected that these vCard extensions will also specify extensions to the JSON format described in this document.  New JSON vCard property and parameter element names MUST be lower-case.  This is necessary to ensure that round-tripping between JSON and plain-text vCard works correctly.  Unregistered extensions (i.e., those starting with "X-" and "VND-...-") are expressed in JSON by using properties starting with "x-" and "vnd-...-". Refer to Section 6 for the implications when converting between plain-text vCard and JSON.  For example:</t>
-      <figure anchor='figure-5' title='An example of extensibility'>
+      <figure anchor='figure-7' title='An example of extensibility'>
         <artwork><![CDATA[
 {
 "x-my-prop": {
-  "parameters": {
-    "pref": { "integer": "1" }
-    },
-  "text": "value goes here"
+    "pref":  1,
+    "text": "value goes here"
   }
 }
         ]]></artwork>
