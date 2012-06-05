@@ -37,7 +37,7 @@
         <email>psaintan@cisco.com</email>
       </address>
     </author>
-    <date year="2012" month="June" day="4"/>
+    <date year="2012" month="June" day="5"/>
     <keyword>vCard</keyword>
     <keyword>JSON</keyword>
     <abstract>
@@ -262,6 +262,7 @@ END:VCARD
     </section>
 
     <section title="Acknowledgements" anchor="acks">
+      <t>Thanks to Joe Hildebrand for his feedback.</t>
       <t>Some text in this document was borrowed from <xref target='RFC6351'/>.</t>
     </section>
 
