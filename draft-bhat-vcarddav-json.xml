@@ -74,60 +74,53 @@
     "bday": { "date": "--0203" },
     "anniversary": { "date-time": "20090808T1430-0500" },
     "gender": { "sex" : "M" },
-    "lang": [ 
-      {
+    "lang": [ {
         "pref": 1,
         "language-tag": "fr",
-      },
-      {
+    },
+    {
         "pref": 2,
         "language-tag": "en",
-      },
+    },
     ],
-    "org": 
-      {
+    "org": {
         "type": "work",
         "text": "Viagenie"
-      },
-    "adr": 
-      {
+    },
+    "adr": {
         "type": "work",
-        "label": "Simon Perreault
-           2875 boul. Laurier, suite D2-630
-           Quebec, QC, Canada
-           G1V 2M2",
+        "label": "Simon Perreault\n2875 boul. Laurier, suite D2-630\nQuebec, QC, Canada\nG1V 2M2",
         "street": "2875 boul. Laurier, suite D2-630",
         "locality": "Quebec",
         "region": "QC",
         "code": "G1V 2M2",
         "country": "CA"
-      },
-    "tel": [ 
-      {
+    },
+    "tel": [ {
         "type":  ["work", "voice"],
         "uri": "tel:+1-418-656-9254;ext=102"
-      },
-      {
+    },
+    {
         "type": ["work", "text", "voice", "cell", "video"],
         "uri": "tel:+1-418-262-6501"
-      }
+    }
     ],
     "email": {
-      "type": "work",
-      "text": "simon.perreault@viagenie.ca"
+    "type": "work",
+    "text": "simon.perreault@viagenie.ca"
     },
     "geo": {
-      "type": "work",
-      "uri": "geo:46.766336,-71.28955"
+        "type": "work",
+        "uri": "geo:46.766336,-71.28955"
     },
     "key": {
-      "type": "work",
-      "uri": "http://www.viagenie.ca/simon.perreault/simon.asc"
+        "type": "work",
+        "uri": "http://www.viagenie.ca/simon.perreault/simon.asc"
     },
     "tz": "America/Montreal",
     "url": {
-      "type": "home",
-      "uri": "http://nomis80.org"
+        "type": "home",
+        "uri": "http://nomis80.org"
     }
 }
         ]]></artwork>
@@ -138,28 +131,28 @@
       <t>The general idea is to map vCard parameters, properties and value types to JSON property/value pairs.  For example, the "FN" property is mapped to the fn property.  Value contains a text string that corresponds to the vCard property's value.  vCard parameters are also mapped to JSON objects which are contained in the value object.  For example, the "TYPE" parameter applied to the "TEL" property would look like the following in JSON.</t>
       <figure anchor='figure-2' title='Mapping of a vCard parameter'>
         <artwork><![CDATA[
-  "tel": {
-      "type": [ "voice", "video" ],
-      "uri": "tel:+1-555-555-555"
-  }
+    "tel": {
+    "type": [ "voice", "video" ],
+    "uri": "tel:+1-555-555-555"
+    }
         ]]></artwork>
       </figure>
 
-      <t>Parameters taking a list of values and properties with cardinality of more than one are converted to a JSON array object.  Properties having structured values (e.g., the "N" property) are expressed by nested JSON object trees.  Properties within that tree ("surname", "given", etc.) are mapped as simple name/value pairs.  Line folding is a non-issue in JSON.  Therefore, the mapping from vCard to JSON is done after the unfolding procedure is carried out.  Conversely, the mapping from JSON to vCard is done before the folding procedure is carried out.  The group construct (Section 3.2 in <xref target='RFC6350'/>) is represented with the JSON object of the same name.  For example:</t>
+      <t>Parameters taking a list of values and properties with cardinality of more than one are converted to a JSON array object.  Properties having structured values (e.g., the "N" property) are expressed by nested JSON object trees. Properties within that tree ("surname", "given", etc.) are mapped as simple name/value pairs. These pairs should follow the schema defined by the XML mapping of vCard(Appendix A in <xref target='RFC6351'/>) Line folding is a non-issue in JSON.  Therefore, the mapping from vCard to JSON is done after the unfolding procedure is carried out.  Conversely, the mapping from JSON to vCard is done before the folding procedure is carried out.  The group construct (Section 3.2 in <xref target='RFC6350'/>) is represented with the JSON object of the same name.  For example:</t>
       <figure anchor='figure-3' title='Mapping of lists and structured values'>
         <artwork><![CDATA[
 
-  {
-      "version" : "4.0"
-      "contact": {
-          "fn": "...",
-          "email": "..."
-      },
-      "media" : {
+{
+    "version" : "4.0"
+    "contact": {
+        "fn": "...",
+        "email": "..."
+    },
+    "media" : {
         "photo": "..."
-        },
-      "categories": "..."
-  }
+    },
+    "categories": "..."
+}
         ]]></artwork>
       </figure>
       <t>... is equivalent to:</t>
@@ -179,12 +172,12 @@ END:VCARD
         <artwork><![CDATA[
 {
     "email": {
-      "type": "work",
-      "text": "simon.perreault@viagenie.ca"
+    "type": "work",
+    "text": "simon.perreault@viagenie.ca"
     },
     "geo": {
-      "type": "work",
-      "uri": "geo:46.766336,-71.28955"
+        "type": "work",
+        "uri": "geo:46.766336,-71.28955"
     },
     "bday": { "date": "--0203" },
 }
@@ -211,10 +204,10 @@ END:VCARD
       <figure anchor='figure-7' title='An example of extensibility'>
         <artwork><![CDATA[
 {
-"x-my-prop": {
-    "pref":  1,
+    "x-my-prop": {
+        "pref":  1,
     "text": "value goes here"
-  }
+    }
 }
         ]]></artwork>
       </figure>
@@ -226,8 +219,11 @@ END:VCARD
     <section title="Format Conversions" anchor="conversions">
       <t>To follow</t>
     </section>
+    <section title="Schema definition" anchor="schema">
+      <t>To follow</t>
+    </section>
 
-    <section title="Security Considerations" anchor="security">
+      <section title="Security Considerations" anchor="security">
       <t>All the security considerations applicable to plain vCard <xref target='RFC6350'/> are also applicable to the JSON representation of vCard.</t>
       <t>As explained in <xref target='RFC4627'/>, JSON is a subset of JavaScript, but it is a safe subset that excludes assignment and invocation.  A JSON text can be safely passed into JavaScript's eval() function (which compiles and executes a string) if all the characters not enclosed in strings are in the set of characters that form JSON tokens.</t>
     </section>
