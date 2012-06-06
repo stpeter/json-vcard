@@ -89,7 +89,9 @@
     },
     "adr": {
         "type": "work",
-        "label": "Simon Perreault\n2875 boul. Laurier, suite D2-630\nQuebec, QC, Canada\nG1V 2M2",
+        "label": "Simon Perreault
+2875 boul. Laurier, suite D2-630
+Quebec, QC, Canada G1V 2M2",
         "street": "2875 boul. Laurier, suite D2-630",
         "locality": "Quebec",
         "region": "QC",
